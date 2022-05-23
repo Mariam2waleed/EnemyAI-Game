@@ -5,10 +5,12 @@ using UnityEngine.AI;
 public class EnemyAiTutorial : MonoBehaviour
 {
     public NavMeshAgent agent;
+
     public Transform player;
-    private int health = 100;
+
     public LayerMask whatIsGround, whatIsPlayer;
-    public float health;
+
+    public float health =100f;
 
     //Patroling
     public Vector3 walkPoint;
@@ -24,12 +26,14 @@ public class EnemyAiTutorial : MonoBehaviour
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
 
-    private void Awake(){
+    private void Awake()
+    {
         player = GameObject.Find("PlayerObj").transform;
         agent = GetComponent<NavMeshAgent>();
     }
 
-    private void Update(){
+    private void Update()
+    {
         //Check for sight and attack range
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
@@ -39,7 +43,8 @@ public class EnemyAiTutorial : MonoBehaviour
         if (playerInAttackRange && playerInSightRange) AttackPlayer();
     }
 
-    private void Patroling(){
+    private void Patroling()
+    {
         if (!walkPointSet) SearchWalkPoint();
 
         if (walkPointSet)
@@ -91,30 +96,20 @@ public class EnemyAiTutorial : MonoBehaviour
     {
         alreadyAttacked = false;
     }
-    //    public void TakeDamage(int damage){
-    //      health -= damage;
-    //    if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
-    //}
 
-
-
-    public void takeDamage()
+    public void TakeDamage(int damage)
     {
-        health -= 10;
-        healthText.text = "Health " + health + "%";
-        healthSlider.value = health / 100f;
-        s.PlayOneShot(attackSound);
+        health -= damage;
 
-        if (health == 0)
-        {
-            SceneManager.LoadScene("LOSE");
-
-        }
+        if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
     }
-    private void DestroyEnemy(){
+    private void DestroyEnemy()
+    {
         Destroy(gameObject);
     }
-    private void OnDrawGizmosSelected(){
+
+    private void OnDrawGizmosSelected()
+    {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.color = Color.yellow;
